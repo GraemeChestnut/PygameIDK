@@ -13,8 +13,11 @@ radius = 25
 
 x, y = SCREEN_SIZE/2 , SCREEN_SIZE/2    # middle of the screen
 dy = 0  # vertical speed, starts at 0 since circle is not moving
+dx = 0
 gravity = 0.5 # gravity multipler
 damping = 0.7 # damping for bounce, when ball bounce it doesn't bounce back as high
+acceleration = 0.5   
+friction = 0.05
 
 while running:
     # poll for events
@@ -22,6 +25,8 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+    
+    keys = pygame.key.get_pressed() # y movement
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
@@ -30,12 +35,50 @@ while running:
     dy += gravity # increase y down force by gravity
     y += dy # updates y position
 
+    x += dx
+
+    if keys[pygame.K_d]:
+        dx += acceleration
+    if keys[pygame.K_a]:
+        dx -= acceleration
+
+
     # checks for colision with the ground
     if (y + radius > SCREEN_SIZE):
         y = SCREEN_SIZE - radius
         dy = -dy * damping
+    if (y - radius < 0):
+        y = radius
+        dy = -(dy * damping)
+    if (x + radius > SCREEN_SIZE):
+        x = SCREEN_SIZE - radius
+        dx = -dx * damping
+    if (x - radius < 0):
+        x = radius
+        dx = -(dx * damping)
 
+    if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
+        if dx > 0:
+            dx -= friction
+            if dx < 0:
+                dx = 0
+        elif dx < 0:
+            dx += friction
+            if dx > 0:
+                dx = 0
+    
+
+    
     pygame.draw.circle(screen, color, (x, y), radius)
+
+   
+    if keys[pygame.K_SPACE]:
+        #y -= 10 
+        dy -= gravity*1.5
+    if keys[pygame.K_d]:
+        pass
+    if keys[pygame.K_a]:
+        pass
 
     # flip() the display to put your work on screen
     pygame.display.flip()
