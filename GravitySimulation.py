@@ -10,16 +10,19 @@ clock = pygame.time.Clock()
 running = True
 
 ####### PLAYER VARIABLES ########
-color = "black"
-radius = 25
 
-x, y = SCREEN_SIZE/2 , SCREEN_SIZE/2    # middle of the screen
-dy = 0  # vertical speed, starts at 0 since circle is not moving
-dx = 0
-gravity = 0.5 # gravity multipler
-damping = 0.7 # damping for bounce, when ball bounce it doesn't bounce back as high
-acceleration = 0.5   
-friction = 0.05
+class Player():
+    def __init__(self):
+        self.color = "black"
+        self.radius = 25
+        self.x = SCREEN_SIZE/2 
+        self.y = SCREEN_SIZE/2    # middle of the screen
+        self.dy = 0  # vertical speed, starts at 0 since circle is not moving
+        self.dx = 0
+        self.gravity = 0.5 # gravity multipler
+        self.damping = 0.7 # damping for bounce, when ball bounce it doesn't bounce back as high
+        self.acceleration = 0.5   
+        self.friction = 0.05
 
 class Enemy():
     def __init__(self, x, y):
@@ -28,8 +31,9 @@ class Enemy():
         self.radius = 10
         self.color = "red"
         
+player = Player()
+enemy = Enemy(0 - player.radius, random.randint(player.radius, 450) + player.radius)
 
-enemy = Enemy(0 - radius, random.randint(radius, 450) + radius)
 bulletY = enemy.y
 
 while running:
@@ -45,40 +49,40 @@ while running:
     screen.fill("white")
 
     # RENDER YOUR GAME HERE
-    dy += gravity # increase y down force by gravity
-    y += dy # updates y position
+    player.dy += player.gravity # increase y down force by gravity
+    player.y += player.dy # updates y position
 
-    x += dx
+    player.x += player.dx
 
     if keys[pygame.K_d]:
-        dx += acceleration
+        player.dx += player.acceleration
     if keys[pygame.K_a]:
-        dx -= acceleration
+        player.dx -= player.acceleration
 
 
     # checks for colision with the ground
-    if (y + radius > SCREEN_SIZE):
-        y = SCREEN_SIZE - radius
-        dy = -dy * damping
-    if (y - radius < 0):
-        y = radius
-        dy = -(dy * damping)
-    if (x + radius > SCREEN_SIZE):
-        x = SCREEN_SIZE - radius
-        dx = -dx * damping
-    if (x - radius < 0):
-        x = radius
-        dx = -(dx * damping)
+    if (player.y + player.radius > SCREEN_SIZE):
+        player.y = SCREEN_SIZE - player.radius
+        player.dy = -player.dy * player.damping
+    if (player.y - player.radius < 0):
+        player.y = player.radius
+        player.dy = -(player.dy * player.damping)
+    if (player.x + player.radius > SCREEN_SIZE):
+        player.x = SCREEN_SIZE - player.radius
+        player.dx = -player.x * player.damping
+    if (player.x - player.radius < 0):
+        player.x = player.radius
+        player.dx = -(player.dx * player.damping)
 
     if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
-        if dx > 0:
-            dx -= friction
-            if dx < 0:
-                dx = 0
-        elif dx < 0:
-            dx += friction
-            if dx > 0:
-                dx = 0
+        if player.dx > 0:
+            player.dx -= player.friction
+            if player.dx < 0:
+                player.dx = 0
+        elif player.dx < 0:
+            player.dx += player.friction
+            if player.dx > 0:
+                player.dx = 0
     
         
     bullet = pygame.draw.circle(screen, "purple", (enemy.x, bulletY), 5)
@@ -88,12 +92,12 @@ while running:
     ##### DRAW SPRITES #####
     pygame.draw.circle(screen, enemy.color, (enemy.x, enemy.y), enemy.radius)
     enemy.x += 1
-    pygame.draw.circle(screen, color, (x, y), radius)
+    pygame.draw.circle(screen, player.color, (player.x, player.y), player.radius)
     
    
     if keys[pygame.K_SPACE]:
         #y -= 10 
-        dy -= gravity*1.5
+        player.dy -= player.gravity*1.5
 
     # flip() the display to put your work on screen
     pygame.display.flip()
