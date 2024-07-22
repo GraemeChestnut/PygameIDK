@@ -35,6 +35,17 @@ player = Player()
 enemy = Enemy(0 - player.radius, random.randint(player.radius, 450) + player.radius)
 
 bulletY = enemy.y
+bulletX = enemy.x
+
+
+
+
+##################### _____________GAME LOOP_______________ ##########################
+
+
+
+######################################################################################
+
 
 while running:
     # poll for events
@@ -62,30 +73,43 @@ while running:
 
     # checks for colision with the ground
     if (player.y + player.radius > SCREEN_SIZE):
+
         player.y = SCREEN_SIZE - player.radius
         player.dy = -player.dy * player.damping
+
     if (player.y - player.radius < 0):
+
         player.y = player.radius
         player.dy = -(player.dy * player.damping)
+
     if (player.x + player.radius > SCREEN_SIZE):
+
         player.x = SCREEN_SIZE - player.radius
         player.dx = -player.x * player.damping
+
     if (player.x - player.radius < 0):
+
         player.x = player.radius
         player.dx = -(player.dx * player.damping)
 
     if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
+
         if player.dx > 0:
             player.dx -= player.friction
+
             if player.dx < 0:
                 player.dx = 0
+
         elif player.dx < 0:
             player.dx += player.friction
+
             if player.dx > 0:
                 player.dx = 0
     
-        
-    bullet = pygame.draw.circle(screen, "purple", (enemy.x, bulletY), 5)
+    bullet = [pygame.draw.circle(screen, "purple", (enemy.x, bulletY), 5)]
+    if(random.randint(0,50) == 50):
+        bullet.append(pygame.draw.circle(screen, "purple", (enemy.x, bulletY), 5))
+    print(len(bullet))
     bulletY += 1
 
 
