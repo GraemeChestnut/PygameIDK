@@ -27,16 +27,10 @@ class Enemy():
         self.y = y
         self.radius = 10
         self.color = "red"
-
-class Bullet():
-    def __init__(self, x, y):
-          self.x = x
-        self.y = y
-        self.radius = 5
-        self.color = "red"
         
 
 enemy = Enemy(0 - radius, random.randint(radius, 450) + radius)
+bulletY = enemy.y
 
 while running:
     # poll for events
@@ -86,6 +80,10 @@ while running:
             if dx > 0:
                 dx = 0
     
+        
+    bullet = pygame.draw.circle(screen, "purple", (enemy.x, bulletY), 5)
+    bulletY += 1
+
 
     ##### DRAW SPRITES #####
     pygame.draw.circle(screen, enemy.color, (enemy.x, enemy.y), enemy.radius)
