@@ -1,4 +1,5 @@
 import pygame
+import random
 
 # pygame setup
 SCREEN_SIZE = 500
@@ -8,6 +9,7 @@ pygame.display.set_caption("Gravity Simulation")
 clock = pygame.time.Clock()
 running = True
 
+####### PLAYER VARIABLES ########
 color = "black"
 radius = 25
 
@@ -18,6 +20,23 @@ gravity = 0.5 # gravity multipler
 damping = 0.7 # damping for bounce, when ball bounce it doesn't bounce back as high
 acceleration = 0.5   
 friction = 0.05
+
+class Enemy():
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.radius = 10
+        self.color = "red"
+
+class Bullet():
+    def __init__(self, x, y):
+          self.x = x
+        self.y = y
+        self.radius = 5
+        self.color = "red"
+        
+
+enemy = Enemy(0 - radius, random.randint(radius, 450) + radius)
 
 while running:
     # poll for events
@@ -68,17 +87,15 @@ while running:
                 dx = 0
     
 
-    
+    ##### DRAW SPRITES #####
+    pygame.draw.circle(screen, enemy.color, (enemy.x, enemy.y), enemy.radius)
+    enemy.x += 1
     pygame.draw.circle(screen, color, (x, y), radius)
-
+    
    
     if keys[pygame.K_SPACE]:
         #y -= 10 
         dy -= gravity*1.5
-    if keys[pygame.K_d]:
-        pass
-    if keys[pygame.K_a]:
-        pass
 
     # flip() the display to put your work on screen
     pygame.display.flip()
